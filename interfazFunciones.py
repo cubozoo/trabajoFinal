@@ -1,3 +1,6 @@
+from turtle import color
+import mutagen
+from mutagen.mp3 import MP3
 from tkinter import * 
 import tkinter as tk
 from tkinter import ttk
@@ -7,6 +10,7 @@ import os
  
 
 
+
 ventana = tk.Tk()
 ventana.geometry('1200x800')
 ventana.minsize(1200,800)
@@ -14,40 +18,33 @@ ventana.maxsize(1200,800)
 ventana.iconphoto(False, tk.PhotoImage(file='C:/Users/Usuario/Desktop/ProyectoTFG/Logo.png'))
 ventana.title('MuWusica')
 
+
 listasRepro = []
 listasRepro.append("Selecciona la lista") 
 listasRepro.append("Lista 1")
     
 
+
+
 #Funcion que muestra toda la informacion de la cancion actual   
 def infoCancion():
     global longitud, posActual
     
-
+    cancionActual=apartadoCanciones.get(tk.ACTIVE)
+    
     posActual=pygame.mixer.music.get_pos()/1000 #Indica la posicion de la cancion en milisegundos, se divide entre 1000 para sacar los segundos
-    longitud=pygame.mixer.Sound(apartadoCanciones.get(tk.ACTIVE)).get_length() #Esta funcion permite obtener el valor de la longitud de la cancion actual
+
+    rutaCancion= mutagen.File(f'C:/Users/Usuario/Desktop/trabajoFinal/cansiones/{cancionActual}') #Ruta de la cancion actual
+    
+    longitud=rutaCancion.info.length #Esta funcion permite obtener el valor de la longitud de la cancion actual
     
     lineaTiempo.set(posActual)
 
-    #ventana.after(1000,infoCancion) <--Problema, se para cada segundo
+    lineaTiempo.after(1000,infoCancion)
     
-    
-    
-
-   
-    
-
 
 def slide(x):
-    sliderLabel.config(text=f'{int(lineaTiempo.get())} of {int(longitud)}')
-
-
-
-    
-    
-
-
-
+    sliderLabel.config(text=f'{int(lineaTiempo.get())} of {int(longitud)}') #Muestra los segundos de la cancion
 
 
 
@@ -199,8 +196,8 @@ ventana.config(menu=menubar) #Añade el menu a la ventana
 ############################### APARTADOS #################################
 
 #--GRUPOS--
-lGrupos = tk.Label(text= "Grupos", font="Helvetica 12 bold", bg="LightSteelBlue4", relief=RAISED)
-listaGrupos = tk.Listbox(ventana, font="Helvetica 12 bold", bg="#237F90", fg="white", selectmode=tk.SINGLE)
+lGrupos = tk.Label(text= "Grupos", font="Terminal 12", bg="black", fg="orange", relief=RAISED)
+listaGrupos = tk.Listbox(ventana, font="Candara 12", bg="black", fg="white", selectmode=tk.SINGLE)
 
 lGrupos.place(relx=0, rely=0, relwidth=0.25, relheight=0.05)
 listaGrupos.place(relx=0, rely=0.05, relwidth=0.25, relheight=0.65)
@@ -210,8 +207,8 @@ listaGrupos.place(relx=0, rely=0.05, relwidth=0.25, relheight=0.65)
 
 
 #--DISCOS--
-lDiscos = tk.Label(text= "Discos", font="Helvetica 12 bold", bg="LightSteelBlue4", relief=RAISED)
-listaDiscos = tk.Listbox(ventana, font="Helvetica 12 bold", bg="#237F90", fg="white", selectmode=tk.SINGLE)
+lDiscos = tk.Label(text= "Discos", font="Terminal 12", bg="black", fg="orange", relief=RAISED)
+listaDiscos = tk.Listbox(ventana, font="Candara 12", bg="black", fg="white", selectmode=tk.SINGLE)
 
 lDiscos.place(relx=0.25, rely=0, relwidth=0.25, relheight=0.05)
 listaDiscos.place(relx=0.25, rely=0.05, relwidth=0.25, relheight=0.65)
@@ -219,27 +216,27 @@ listaDiscos.place(relx=0.25, rely=0.05, relwidth=0.25, relheight=0.65)
 
 #--CANCIONES--
 
-lCanciones = tk.Label(text= "Canciones", font="Helvetica 12 bold", bg="LightSteelBlue4", relief=RAISED)
-apartadoCanciones = tk.Listbox(ventana, font="Helvetica 12 bold", bg="#237F90", fg="white", selectmode=tk.SINGLE)
+lCanciones = tk.Label(text= "Canciones", font="Terminal 12", bg="black", fg="orange", relief=RAISED)
+apartadoCanciones = tk.Listbox(ventana, font="Candara 12", bg="black", fg="white", selectmode=tk.SINGLE)
 
 lCanciones.place(relx=0.5, rely=0, relwidth=0.25, relheight=0.05)
 apartadoCanciones.place(relx=0.5, rely=0.05, relwidth=0.25, relheight=0.65)
 
-#--LISTAS DE REPRODUCCION--
+#--LISTAS DE REPRODUCCION--LightSteelBlue4 #237F90
 
-lListas = tk.Label(text= "Listas de Reproducción", font="Helvetica 12 bold", bg="LightSteelBlue4", relief=RAISED)
-listasReproduccion = tk.Listbox(ventana, font="Helvetica 12 bold", bg="#237F90", fg="white", selectmode=tk.SINGLE)
+lListas = tk.Label(text= "Listas de Reproducción", font="Terminal 12", bg="black", fg="orange", relief=RAISED)
+listasReproduccion = tk.Listbox(ventana, font="Candara 12", bg="black", fg="white", selectmode=tk.SINGLE)
 
 lListas.place(relx=0.75, rely=0, relwidth=0.25, relheight=0.05)
 listasReproduccion.place(relx=0.75, rely=0.1, relwidth=0.25, relheight=0.65)
 
-# style = ttk.Style()    #SE SUPONE QUE CAMBIA EL ESTILO DEL COMBOBOX 
-# style.theme_use('clam')
-# style.configure("TCombobox", fieldbackground= "#237F90")
+style = ttk.Style()    #SE SUPONE QUE CAMBIA EL ESTILO DEL COMBOBOX 
+style.theme_use('clam')
+style.configure("TCombobox", fieldbackground= "#237F90")
 
 
 ############################### COMBOBOX #################################
-comboListas = ttk.Combobox(state="readonly",  values=listasRepro, font="gadugi")
+comboListas = ttk.Combobox(state="readonly",  values=listasRepro, font="gadugi", style="TCombobox")
 comboListas.place(relx=0.75, rely=0.05, relwidth=0.25, relheight=0.05)
 comboListas.current(0)
 
@@ -251,7 +248,7 @@ comboListas.current(0)
 
 ############################### IMAGEN CANCION #################################
 
-imagenCancion = tk.Label(bg="LightSteelBlue4", relief=RAISED)
+imagenCancion = tk.Label(bg="black", relief=RAISED)
 imagenCancion.place(relx=0, rely=0.7, relwidth=0.25, relheight=0.3)
 
 
@@ -259,7 +256,7 @@ imagenCancion.place(relx=0, rely=0.7, relwidth=0.25, relheight=0.3)
 
 ############################### ZONA FUNCIONES #################################
 
-zonaReproduccion = tk.Label(bg="LightSteelBlue4", relief=RAISED)
+zonaReproduccion = tk.Label(bg="black", relief=RAISED)
 zonaReproduccion.place(relx=0.25, rely=0.7, relwidth=0.5, relheight=0.3)
 
 #Boton que selecciona la cancion anterior
@@ -287,7 +284,7 @@ botonInsertar = tk.Button(ventana, width=3, height=1, font="Helvetica 20 bold", 
 botonInsertar.place(relx=0.10, rely=0.75)
 
 
-lineaTiempo = tk.Scale(ventana, bg="#239089", troughcolor="#8ae0db", from_=0, to=100, orient=HORIZONTAL, length=350, showvalue=0, command=slide)
+lineaTiempo = tk.Scale(ventana, bg="orange", troughcolor="orange", from_=0, to=100, orient=HORIZONTAL, length=350, showvalue=0, command=slide)
 lineaTiempo.place(relx=0.35, rely=0.9)
 
 sliderLabel = Label(ventana, text=0)
@@ -299,9 +296,10 @@ sliderLabel.place(relx=0.485, rely=0.85)
 
 
 
+
 ############################### ZONA VOLUMEN (?) #################################
 
-otraZona = tk.Label(text="Usuario000",font="Helvetica 12 bold", bg="LightSteelBlue4", relief=RAISED)
+otraZona = tk.Label(text="Usuario000",font="Helvetica 12 bold", bg="black", fg="white", relief=RAISED)
 otraZona.place(relx=0.75, rely=0.7, relwidth=0.25, relheight=0.3)
 
 if __name__ == '__main__':
@@ -317,6 +315,6 @@ if __name__ == '__main__':
             apartadoCanciones.insert(tk.END, x)
             #pygame.mixer.music.queue(x)
 
-    
+
     ventana.mainloop()
     
